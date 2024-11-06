@@ -283,4 +283,10 @@ export default class Stage extends StageBase {
     this.gamePaused = true;  // Al recibir "Salir", se pausa todo el juego
     this.stopAll();
   }  
+
+  *stopAll() {
+    clearAllIntervals();
+    stopAllSprites();
+    resetGameState();
+  }
 }

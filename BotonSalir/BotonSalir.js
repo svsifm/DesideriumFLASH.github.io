@@ -71,4 +71,10 @@ export default class BotonSalir extends Sprite {
       yield;
     }
   }
+
+  *stopAll() {
+    clearAllIntervals();
+    stopAllSprites();
+    resetGameState();
+  }
 }
