@@ -1,5 +1,6 @@
 /* eslint-disable require-yield, eqeqeq */
 
+
 import {
   Stage as StageBase,
   Trigger,
@@ -9,10 +10,14 @@ import {
   Sound,
 } from "https://unpkg.com/leopard@^1/dist/index.esm.js";
 
+
 export default class Stage extends StageBase {
   constructor(...args) {
     super(...args);
 
+    this.gamePaused = false; // variable que controla si el juego esta pausado o no
+
+    /* Apariencias Escenario */
     this.costumes = [
       new Costume("Fondo_Inicio", "./Stage/costumes/Fondo_Inicio.png", {
         x: 480,
@@ -42,6 +47,8 @@ export default class Stage extends StageBase {
       }),
     ];
 
+
+    /* Sonidos Escenario */
     this.sounds = [
       new Sound("Dance Funky", "./Stage/sounds/Dance Funky.wav"),
       new Sound("Space Ambience", "./Stage/sounds/Space Ambience.wav"),
@@ -50,6 +57,8 @@ export default class Stage extends StageBase {
       new Sound("Oops", "./Stage/sounds/Oops.wav"),
     ];
 
+
+    /* Funciones y Mensajes */
     this.triggers = [
       new Trigger(Trigger.GREEN_FLAG, this.whenGreenFlagClicked),
       new Trigger(
@@ -77,8 +86,15 @@ export default class Stage extends StageBase {
         { name: "FinNivel" },
         this.whenIReceiveFinnivel
       ),
+      new Trigger(
+        Trigger.BROADCAST,
+        { name: "Salir" }, // codigo
+        this.whenIReceiveSalir
+      ),      
     ];
 
+
+    /* Iniciar variables */
     this.vars.tiempo = 60;
     this.vars.vidalilian = 5000;
     this.vars.obstCulos = 0;
@@ -99,12 +115,14 @@ export default class Stage extends StageBase {
     this.vars.vidaumbra = 7000;
     this.vars.mensajeFinnivel = 0;
 
+
+    /* Contadores */
     this.watchers.tiempo = new Watcher({
       label: "tiempo",
       style: "large",
       visible: false,
       value: () => this.vars.tiempo,
-      x: 261,
+      x: 260,
       y: 160,
     });
     this.watchers.vidalilian = new Watcher({
@@ -112,7 +130,7 @@ export default class Stage extends StageBase {
       style: "large",
       visible: false,
       value: () => this.vars.vidalilian,
-      x: 363,
+      x: 360,
       y: 160,
     });
     this.watchers.vidaumbra = new Watcher({
@@ -120,12 +138,17 @@ export default class Stage extends StageBase {
       style: "large",
       visible: false,
       value: () => this.vars.vidaumbra,
-      x: 544,
-      y: 159,
+      x: 550,
+      y: 160,
     });
   }
 
+
+ /* Funciones y Mensajes */
+
+  // Bandera Verde
   *whenGreenFlagClicked() {
+    this.gamePaused = false;  // Cuando se presiona la bandera verde, el juego no esta pausado
     this.vars.mensajeNivel2 = 0;
     this.vars.mensajeFinalizar = 0;
     this.costume = "Fondo_Inicio";
@@ -139,7 +162,8 @@ export default class Stage extends StageBase {
     this.vars.musicaNivel1 = 0;
     this.vars.musicaNivel2 = 0;
     this.vars.musicaInicio = 1;
-    while (true) {
+
+    while (!this.gamePaused) {  // Mientras el juego no este pausado, sigue la logica
       if (this.toNumber(this.vars.musicaInicio) === 1) {
         yield* this.playSoundUntilDone("Dance Funky");
       }
@@ -152,7 +176,9 @@ export default class Stage extends StageBase {
       yield;
     }
   }
+  
 
+  // Mensaje: Finalizar
   *whenIReceiveFinalizar() {
     this.watchers.tiempo.visible = false;
     this.watchers.vidalilian.visible = false;
@@ -161,6 +187,8 @@ export default class Stage extends StageBase {
     this.vars.mensajeNivel2 = 0;
   }
 
+
+  // Mensaje: Nivel1
   *whenIReceiveNivel1() {
     this.stopAllSounds();
     this.vars.musicaInicio = 0;
@@ -184,6 +212,8 @@ export default class Stage extends StageBase {
     }
   }
 
+
+  // Mensaje: Nivel 2
   *whenIReceiveNivel2() {
     this.vars.musicaNivel1 = 0;
     this.vars.mensajeFinalizar = 0;
@@ -213,6 +243,8 @@ export default class Stage extends StageBase {
     }
   }
 
+
+  // Mensaje: Victoria_o_GameOver
   *whenIReceiveVictoriaOGameover() {
     if (
       this.toNumber(this.vars.vidaumbra) === 0 ||
@@ -238,8 +270,17 @@ export default class Stage extends StageBase {
     }
   }
 
+
+  // Mensaje: FinNivel
   *whenIReceiveFinnivel() {
     this.stopAllSounds();
     this.broadcast("Victoria_o_GameOver");
   }
+
+
+  // Funcion: Salir
+  *whenIReceiveSalir() {
+    this.gamePaused = true;  // Al recibir "Salir", se pausa todo el juego
+    this.stopAll();
+  }  
 }

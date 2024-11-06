@@ -39,6 +39,11 @@ export default class BotonSalir extends Sprite {
         { name: "Nivel1" },
         this.whenIReceiveNivel1
       ),
+      new Trigger(
+        Trigger.BROADCAST,
+        { name: "Salir" },
+        this.whenIReceiveSalir
+      ),
       new Trigger(Trigger.GREEN_FLAG, this.whenGreenFlagClicked),
     ];
   }
@@ -46,7 +51,13 @@ export default class BotonSalir extends Sprite {
   *whenIReceiveNivel1() {
     this.visible = false;
   }
-
+  
+  *whenIReceiveSalir() {
+    this.stopAllSounds();  // Detener los sonidos
+    this.broadcast("Salir");  // Se notifica a Stage que el juego debe pausar
+    this.stopAll();
+  } 
+  
   *whenGreenFlagClicked() {
     this.visible = true;
     while (true) {

@@ -13,6 +13,7 @@ export default class BotonJugar extends Sprite {
   constructor(...args) {
     super(...args);
 
+    /* Apariencias BotonJugar */
     this.costumes = [
       new Costume(
         "boton_Jugar_normal",
@@ -31,8 +32,10 @@ export default class BotonJugar extends Sprite {
       ),
     ];
 
-    this.sounds = [];
+    /* Sonidos */
+    this.sounds = []; // ninguno
 
+    /* Funciones y Mensajes */
     this.triggers = [
       new Trigger(Trigger.GREEN_FLAG, this.whenGreenFlagClicked),
       new Trigger(
@@ -57,6 +60,7 @@ export default class BotonJugar extends Sprite {
     }
   }
 
+  /* Funciones y Mensajes */
   *whenIReceiveNivel1() {
     this.visible = false;
   }

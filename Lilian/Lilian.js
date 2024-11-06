@@ -14,22 +14,18 @@ export default class Lilian extends Sprite {
     super(...args);
 
     this.costumes = [
-      new Costume("Lilian_idle", "./Lilian/costumes/Lilian_idle.png", {
-        x: 360,
-        y: 360,
-      }),
-      new Costume("Lilian_salto", "./Lilian/costumes/Lilian_salto.png", {
-        x: 360,
-        y: 360,
-      }),
+      new Costume("Lilian_idle", "./Lilian/costumes/Lilian_idle.png",
+        { x: 360, y: 360 }
+      ),
+      new Costume("Lilian_salto", "./Lilian/costumes/Lilian_salto.png",
+        { x: 360, y: 360, }
+      ),
       new Costume(
-        "LilianAtacante_idle",
-        "./Lilian/costumes/LilianAtacante_idle.png",
+        "LilianAtacante_idle", "./Lilian/costumes/LilianAtacante_idle.png",
         { x: 360, y: 360 }
       ),
       new Costume(
-        "LilianAtacante_ataque",
-        "./Lilian/costumes/LilianAtacante_ataque.png",
+        "LilianAtacante_ataque", "./Lilian/costumes/LilianAtacante_ataque.png",
         { x: 360, y: 360 }
       ),
     ];
